@@ -3,7 +3,7 @@ from QA_RAG import *
 from streamlit_option_menu import option_menu
 import pandas as pd
 
-st.set_page_config(page_title="KFPA QA Search", page_icon="C:\python-RAG\doc_QA\logo_pageicon1.png")
+st.set_page_config(page_title="KFPA QA Search", page_icon="logo_pageicon1.png")
 st.title(":book: 기술자료 기반 검색 Q&A System")
 st.divider()
 
@@ -70,7 +70,7 @@ with st.sidebar:
         for submenu, link in menu_data[app].items():
             st.markdown(f"[{submenu}]({link})")
 
-    st.image('C:\python-RAG\doc_QA\KV.png')
+    st.image('KV.png')
 
 # 참조 문서 표시 함수 정의
 def display_retrieved_documents(documents):
