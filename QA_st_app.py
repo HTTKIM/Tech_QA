@@ -47,7 +47,7 @@ st.markdown(
 
 # Sidebar 기능 설정
 with st.sidebar:   
-    st.image('C:\python-RAG\doc_QA\\bridge.PNG')
+    st.image('bridge.PNG')
     st.header("About")
     st.markdown("Bridge 지식위키에 게시된 법령과 기준 기반으로 답변합니다.")
     st.write("")
