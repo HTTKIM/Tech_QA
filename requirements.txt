@@ -9,3 +9,4 @@ sentence-transformers
 faiss-cpu
 langchain-huggingface
 streamlit
+streamlit_option_menu
