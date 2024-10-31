@@ -10,7 +10,7 @@ st.divider()
 ## Sidebar 설정 ##
 
 # 위키 링크를 구성을 위한 분류파일 읽어오기
-file_path = 'C:\python-RAG\doc_QA\menu_list(241028).xlsx'
+file_path = 'menu_list(241028).xlsx'
 menu_df = pd.read_excel(file_path)
 
 # Wiki page 바로가기 설정을 위한 메뉴 읽어오기
