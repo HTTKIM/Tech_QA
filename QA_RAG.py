@@ -34,7 +34,7 @@ embedding = HuggingFaceEmbeddings(
 )
 
 db = FAISS.load_local(
-    folder_path="C:\python-RAG\QA_DB(241029)_meta_1",
+    folder_path="QA_DB(241029)_meta_1",
     embeddings=embedding,
     allow_dangerous_deserialization=True
 )
