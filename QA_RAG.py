@@ -39,7 +39,7 @@ db = FAISS.load_local(
     allow_dangerous_deserialization=True
 )
 
-retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 3, 'fetch_k': 5})
+retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 5, 'fetch_k': 20})
 
 def format_docs(docs):
     return "\n\n".join([doc.page_content for doc in docs])
