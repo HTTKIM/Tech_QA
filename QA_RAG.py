@@ -75,7 +75,7 @@ prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'q
 
 ########## use when using RetrievalQA chain from llm's chain ##########
 qa = RetrievalQA.from_chain_type(llm=llm, chain_type='stuff',
-                                 retriever=Multiquery_retriever,
+                                 retriever=multiquery_retriever,
                                  return_source_documents=True,
                                  chain_type_kwargs={'prompt': prompt},
                                  verbose=False)
