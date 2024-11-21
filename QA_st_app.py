@@ -75,7 +75,7 @@ with st.sidebar:
 # 참조 문서 표시 함수 정의
 def display_retrieved_documents(documents):
     with st.expander("참조 문서 확인"):
-        for idx, doc in enumerate(documents):
+        for idx, doc in enumerate(documents[:5]):
             source = doc.metadata.get('source', 'N/A')
             url = doc.metadata.get('url', '#')  # URL이 없을 경우 기본 링크 처리
             st.markdown(f"**Document {idx+1}**")
