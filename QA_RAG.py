@@ -88,7 +88,7 @@ def inference(query: str):
     return rag_chain.stream(query)
 
 def retrieve_documents(query: str):
-    documents = retriever.get_relevant_documents(query)  # documents 검색
+    documents = multiquery_retriever.get_relevant_documents(query)  # documents 검색
     return documents  # 검색된 문서 반환
 
 import os
