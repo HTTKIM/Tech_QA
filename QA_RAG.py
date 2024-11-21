@@ -44,11 +44,11 @@ db = FAISS.load_local(
 
 ########## LLM & Retriever ##########
 
-llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.2, streaming=True)
+llm = ChatOpenAI(model_name="gpt-4o", temperature=0.2, streaming=True)
 
 long_context_reorder = LongContextReorder()
 
-retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 5, 'fetch_k': 20}, document_transformer = long_context_reorder)
+retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 10, 'fetch_k': 20}, document_transformer = long_context_reorder)
 
 multiquery_retriever = MultiQueryRetriever.from_llm(retriever = retriever, llm = llm)
 
@@ -81,7 +81,7 @@ qa = RetrievalQA.from_chain_type(llm=llm, chain_type='stuff',
                                  verbose=False)
 
 ########## RAG's chain in langchain's LECL format ##########
-rag_chain = ({"context": retriever | format_docs, "question": RunnablePassthrough()} | 
+rag_chain = ({"context": multiquery_retriever | format_docs, "question": RunnablePassthrough()} | 
              prompt | llm | StrOutputParser())
 
 def inference(query: str):
