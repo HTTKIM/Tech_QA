@@ -24,7 +24,7 @@ load_dotenv()
 os.environ["LANGCHAIN_TRACING_V2"]="true"
 os.environ["LANGCHAIN_ENDPOINT"]="https://api.smith.langchain.com"
 os.environ["LANGCHAIN_API_KEY"]="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"
-os.environ["LANGCHAIN_PROJECT"]="Tech_QA"
+os.environ["LANGCHAIN_PROJECT"]="지식카드 작업"
 
 ################### for streaming in Streamlit without LECL ###################
 class StreamHandler(BaseCallbackHandler):
