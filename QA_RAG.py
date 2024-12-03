@@ -11,8 +11,18 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_community.document_transformers import LongContextReorder
 from langchain.retrievers.multi_query import MultiQueryRetriever
 
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+
 from dotenv import load_dotenv
 load_dotenv()
+
+# langsmith 연동
+os.environ["LANGCHAIN_TRACING_V2"]="true"
+os.environ["LANGCHAIN_ENDPOINT"]="https://api.smith.langchain.com"
+os.environ["LANGCHAIN_API_KEY"]="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"
+os.environ["LANGCHAIN_PROJECT"]="Tech_QA"
 
 ################### for streaming in Streamlit without LECL ###################
 class StreamHandler(BaseCallbackHandler):
@@ -52,6 +62,20 @@ retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 10, 'f
 
 multiquery_retriever = MultiQueryRetriever.from_llm(retriever = retriever, llm = llm)
 
+########## Rerank 설정 ##########
+
+# CrossEncoder 모델 초기화
+reranker_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-v2-m3")
+
+# 상위 5개의 문서를 선택하도록 CrossEncoderReranker 설정
+compressor = CrossEncoderReranker(model=reranker_model, top_n=5)
+
+# 기존의 multiquery_retriever를 ContextualCompressionRetriever로 래핑
+compression_retriever = ContextualCompressionRetriever(
+    base_compressor=compressor, 
+    base_retriever=multiquery_retriever
+)
+
 def format_docs(docs):
     return "\n\n".join([doc.page_content for doc in docs])
 
@@ -71,8 +95,6 @@ Helpful Answer:
 
 prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
 
-
-
 ########## use when using RetrievalQA chain from llm's chain ##########
 qa = RetrievalQA.from_chain_type(llm=llm, chain_type='stuff',
                                  retriever=multiquery_retriever,
@@ -81,7 +103,7 @@ qa = RetrievalQA.from_chain_type(llm=llm, chain_type='stuff',
                                  verbose=False)
 
 ########## RAG's chain in langchain's LECL format ##########
-rag_chain = ({"context": multiquery_retriever | format_docs, "question": RunnablePassthrough()} | 
+rag_chain = ({"context": compression_retriever | format_docs, "question": RunnablePassthrough()} | 
              prompt | llm | StrOutputParser())
 
 def inference(query: str):
