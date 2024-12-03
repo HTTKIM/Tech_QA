@@ -66,17 +66,17 @@ multiquery_retriever = MultiQueryRetriever.from_llm(retriever = retriever, llm =
 
 ########## Rerank 설정 ##########
 
-# CrossEncoder 모델 초기화
-reranker_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-v2-m3")
+# # CrossEncoder 모델 초기화
+# reranker_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-v2-m3")
 
-# 상위 5개의 문서를 선택하도록 CrossEncoderReranker 설정
-compressor = CrossEncoderReranker(model=reranker_model, top_n=5)
+# # 상위 5개의 문서를 선택하도록 CrossEncoderReranker 설정
+# compressor = CrossEncoderReranker(model=reranker_model, top_n=5)
 
-# 기존의 multiquery_retriever를 ContextualCompressionRetriever로 래핑
-compression_retriever = ContextualCompressionRetriever(
-    base_compressor=compressor, 
-    base_retriever=multiquery_retriever
-)
+# # 기존의 multiquery_retriever를 ContextualCompressionRetriever로 래핑
+# compression_retriever = ContextualCompressionRetriever(
+#     base_compressor=compressor, 
+#     base_retriever=multiquery_retriever
+# )
 
 def format_docs(docs):
     return "\n\n".join([doc.page_content for doc in docs])
@@ -97,15 +97,8 @@ Helpful Answer:
 
 prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
 
-########## use when using RetrievalQA chain from llm's chain ##########
-qa = RetrievalQA.from_chain_type(llm=llm, chain_type='stuff',
-                                 retriever=multiquery_retriever,
-                                 return_source_documents=True,
-                                 chain_type_kwargs={'prompt': prompt},
-                                 verbose=False)
-
 ########## RAG's chain in langchain's LECL format ##########
-rag_chain = ({"context": compression_retriever | format_docs, "question": RunnablePassthrough()} | 
+rag_chain = ({"context": multiquery_retriever | format_docs, "question": RunnablePassthrough()} | 
              prompt | llm | StrOutputParser())
 
 def inference(query: str):
