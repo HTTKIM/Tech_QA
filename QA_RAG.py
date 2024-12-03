@@ -15,6 +15,8 @@ from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import CrossEncoderReranker
 from langchain_community.cross_encoders import HuggingFaceCrossEncoder
 
+import os
+
 from dotenv import load_dotenv
 load_dotenv()
 
