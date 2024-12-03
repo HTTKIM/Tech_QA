@@ -60,23 +60,23 @@ llm = ChatOpenAI(model_name="gpt-4o", temperature=0.2, streaming=True)
 
 long_context_reorder = LongContextReorder()
 
-retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 10, 'fetch_k': 20}, document_transformer = long_context_reorder)
+retriever = db.as_retriever(search_type="similarity", search_kwargs={'k': 5, 'fetch_k': 10}, document_transformer = long_context_reorder)
 
 multiquery_retriever = MultiQueryRetriever.from_llm(retriever = retriever, llm = llm)
 
 ########## Rerank 설정 ##########
 
-# # CrossEncoder 모델 초기화
-# reranker_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-v2-m3")
+# CrossEncoder 모델 초기화
+reranker_model = HuggingFaceCrossEncoder(model_name="BAAI/bge-reranker-v2-m3")
 
-# # 상위 5개의 문서를 선택하도록 CrossEncoderReranker 설정
-# compressor = CrossEncoderReranker(model=reranker_model, top_n=5)
+# 상위 5개의 문서를 선택하도록 CrossEncoderReranker 설정
+compressor = CrossEncoderReranker(model=reranker_model, top_n=3)
 
-# # 기존의 multiquery_retriever를 ContextualCompressionRetriever로 래핑
-# compression_retriever = ContextualCompressionRetriever(
-#     base_compressor=compressor, 
-#     base_retriever=multiquery_retriever
-# )
+# 기존의 multiquery_retriever를 ContextualCompressionRetriever로 래핑
+compression_retriever = ContextualCompressionRetriever(
+    base_compressor=compressor, 
+    base_retriever=multiquery_retriever
+)
 
 def format_docs(docs):
     return "\n\n".join([doc.page_content for doc in docs])
@@ -98,7 +98,7 @@ Helpful Answer:
 prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
 
 ########## RAG's chain in langchain's LECL format ##########
-rag_chain = ({"context": multiquery_retriever | format_docs, "question": RunnablePassthrough()} | 
+rag_chain = ({"context": compression_retriever | format_docs, "question": RunnablePassthrough()} | 
              prompt | llm | StrOutputParser())
 
 def inference(query: str):
