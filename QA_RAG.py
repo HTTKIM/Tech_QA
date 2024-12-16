@@ -42,15 +42,17 @@ and 'callbacks=[stream_handler]' and streamhandler uses st.empty() placeholder h
 """
 ####################### EMBEDDINGS #################################
 
-embedding = HuggingFaceEmbeddings(
-    model_name="jhgan/ko-sbert-nli",
-    model_kwargs={'device': 'cpu'},
-    encode_kwargs={'normalize_embeddings': True}
-)
+# embedding = HuggingFaceEmbeddings(
+#     model_name="jhgan/ko-sbert-nli",
+#     model_kwargs={'device': 'cpu'},
+#     encode_kwargs={'normalize_embeddings': True}
+# )
+
+embeddings = UpstageEmbeddings(api_key="up_1S1HRRiWDnK9FR8ssqJsKFdwsTPbq", model="embedding-passage")
 
 db = FAISS.load_local(
-    folder_path="QA_DB(241029)_meta_1",
-    embeddings=embedding,
+    folder_path="DB(241216)_test",
+    embeddings=embeddings,
     allow_dangerous_deserialization=True
 )
 
