@@ -7,6 +7,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+from langchain_upstage import UpstageEmbeddings
 
 from langchain_community.document_transformers import LongContextReorder
 from langchain.retrievers.multi_query import MultiQueryRetriever
