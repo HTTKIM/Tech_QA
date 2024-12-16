@@ -11,3 +11,4 @@ langchain-huggingface
 streamlit
 streamlit_option_menu
 openpyxl
+langchain-upstage
