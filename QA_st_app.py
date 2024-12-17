@@ -156,13 +156,10 @@ with st.sidebar:
     st.image('KV.png')
 
 ######## 메인화면에서 Expander로 DB 선택 ########
-with st.expander("DATABASE 선택 (메인화면)", expanded=False):
+with st.expander("DATABASE 선택", expanded=False):
     db_main_index = db_list.index(st.session_state['database']) if st.session_state['database'] in db_list else 0
-    main_selection = st.selectbox("Select DB", db_list, index=db_main_index, key='main_db_select')
+    main_selection = st.selectbox(db_list, index=db_main_index, key='main_db_select')
     st.session_state['database'] = main_selection
-    
-    st.write(f"현재 선택된 DATABASE: **{st.session_state['database']}**")
-
 st.divider()
 
 # 동적으로 QA 모듈 임포트
