@@ -165,10 +165,11 @@ with st.expander("DATABASE 선택 (메인화면)", expanded=False):
 
 st.divider()
 
-# 동적으로 QA 모듈 임포트 및 연결
+# 동적으로 QA 모듈 임포트
 try:
-    qa_module = importlib.import_module(f"QA_RAG_{app}")
+    qa_module = importlib.import_module(f"QA_RAG_{st.session_state['database']}")
 except ModuleNotFoundError:
+    st.warning(f"QA 모듈을 찾을 수 없습니다: QA_RAG_{st.session_state['database']}")
     st.stop()
 
 # 참조 문서 표시 함수 정의
