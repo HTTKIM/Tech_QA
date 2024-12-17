@@ -1,4 +1,4 @@
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
 from langchain.chains import RetrievalQA
@@ -49,7 +49,7 @@ embedding = HuggingFaceEmbeddings(
 )
 
 db = FAISS.load_local(
-    folder_path="C:\python_rag\database\DB(241216)_fire_list",
+    folder_path="DB(241216)_fire_list",
     embeddings=embedding,
     allow_dangerous_deserialization=True
 )
