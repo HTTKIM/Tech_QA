@@ -132,7 +132,11 @@ with st.sidebar:
     st.header("DATA 선택")
 
     # 사이드바의 option_menu -> session_state['database'] 동기화
-    selected_db_index = db_list.index(st.session_state['database']) if st.session_state['database'] in db_list else 0
+    if st.session_state['database'] in db_list:
+        selected_db_index = db_list.index(st.session_state['database'])
+    else:
+        selected_db_index = 0
+    
     sidebar_selection = option_menu(
         menu_title='DATABASE LIST',
         options=list(menu_data.keys()),
@@ -145,7 +149,7 @@ with st.sidebar:
             "nav-link": {"color":"black","font-size": "18px", "text-align": "left", "margin":"0px", "--hover-color": "#cfe0de"},
             "nav-link-selected": {"background-color": "#e6f9f7"},
         },
-        key='sidebar_menu'  # 키 설정
+        key='sidebar_menu'
     )
     st.session_state['database'] = sidebar_selection  # 최종적으로 session_state에 저장
 
@@ -156,11 +160,17 @@ with st.sidebar:
 
     st.image('KV.png')
 
-######## 메인화면에서 Expander로 DB 선택 ########
+####### 메인화면 Expander ########
 with st.expander("DATABASE 선택", expanded=True):
-    db_main_index = db_list.index(st.session_state['database']) if st.session_state['database'] in db_list else 0
+    # 동일한 session_state['database'] 사용
+    if st.session_state['database'] in db_list:
+        db_main_index = db_list.index(st.session_state['database'])
+    else:
+        db_main_index = 0
+
     main_selection = st.selectbox("LIST", db_list, index=db_main_index, key='main_db_select')
-    st.session_state['database'] = main_selection
+    st.session_state['database'] = main_selection  # 메인 선택도 session_state에 반영
+
 st.divider()
 
 # 동적으로 QA 모듈 임포트
