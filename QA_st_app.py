@@ -93,6 +93,13 @@ for _, row in menu_df.iterrows():
         menu_data[main_menu] = {}
     menu_data[main_menu][submenu] = link
 
+# DB 목록
+db_list = list(menu_data.keys())
+
+# 세션 상태에 'database'가 없으면 초기값 설정
+if 'database' not in st.session_state:
+    st.session_state['database'] = db_list[0] if db_list else None
+
 # Sidebar 배경색깔 지정 - Bridge color code(#08487d) 적용
 # Sidebar 의 header 및 markdown 글자 색깔 & expander 배경색 지정
 st.markdown(
@@ -121,44 +128,41 @@ with st.sidebar:
     st.header("About")
     st.markdown("Bridge 지식위키에 게시된 법령과 기준 기반으로 답변합니다.")
     st.write("")
-
     st.header("DATA 선택")
-    app = option_menu(
+
+    # 사이드바의 option_menu -> session_state['database'] 동기화
+    selected_db_index = db_list.index(st.session_state['database']) if st.session_state['database'] in db_list else 0
+    sidebar_selection = option_menu(
         menu_title='DATABASE LIST',
         options=list(menu_data.keys()),
-        icons=[''],
+        icons=['']*len(db_list),
         menu_icon='list-task',
-        default_index=0,
+        default_index=selected_db_index,
         styles={
             "container": {"padding": "5!important", "background-color": 'white'},
             "icon": {"color": "black", "font-size": "15px"}, 
             "nav-link": {"color":"black","font-size": "18px", "text-align": "left", "margin":"0px", "--hover-color": "#cfe0de"},
             "nav-link-selected": {"background-color": "#e6f9f7"},
-        }
+        },
+        key='sidebar_menu'  # 키 설정
     )
+    st.session_state['database'] = sidebar_selection  # 최종적으로 session_state에 저장
 
     # 메뉴 항목 관련 법령 및 링크 표시
-    with st.expander(f"{app} 관련 기준 및 법령", expanded=True):
-        for submenu, link in menu_data[app].items():
+    with st.expander(f"{st.session_state['database']} 관련 기준 및 법령", expanded=True):
+        for submenu, link in menu_data[st.session_state['database']].items():
             st.markdown(f"[{submenu}]({link})")
 
     st.image('KV.png')
 
-# 선택된 메뉴 항목 표시 (네모 박스)
-st.markdown(
-    f"""
-    <div style="
-        border: 2px solid #08487d; 
-        border-radius: 5px; 
-        padding: 10px; 
-        background-color: #f9f9f9;
-        color: #08487d;
-        font-size: 15px;">
-        <b>DATABASE :</b> {app}
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+######## 메인화면에서 Expander로 DB 선택 ########
+with st.expander("DATABASE 선택 (메인화면)", expanded=False):
+    db_main_index = db_list.index(st.session_state['database']) if st.session_state['database'] in db_list else 0
+    main_selection = st.selectbox("Select DB", db_list, index=db_main_index, key='main_db_select')
+    st.session_state['database'] = main_selection
+    
+    st.write(f"현재 선택된 DATABASE: **{st.session_state['database']}**")
+
 st.divider()
 
 # 동적으로 QA 모듈 임포트 및 연결
