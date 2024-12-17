@@ -74,8 +74,8 @@ st.markdown(
 )
 
 st.markdown('<div class="custom-list">좌측 사이드바에서 DATA를 선택해 주세요</div>', unsafe_allow_html=True)
-st.markdown('<div class="custom-list">[키워드] 검색 기반입니다. 법령이나 기준에 있는 단어 검색 용도로 사용하세요</div>', unsafe_allow_html=True)
-st.markdown('<div class="custom-sub-list">예시) 방화구획 관련된 내용 모두다 알려줘(X) -> 방화구획 설치대상 건물은?(O)  ', unsafe_allow_html=True)
+st.markdown('<div class="custom-list">[키워드] 기반 법령 내용을 검색하는 목적입니다. 법령에 있는 단어 검색 용도로 사용하세요</div>', unsafe_allow_html=True)
+st.markdown('<div class="custom-sub-list">예시) EPS실, 피트실 등 법령에 없는 단어는 답변이 불가합니다. 방화구획, 피난계단, 옥내소화전 등 법령에 있는 단어는 검색 가능', unsafe_allow_html=True)
 
 ################ Sidebar 설정 ################
 
@@ -156,9 +156,9 @@ with st.sidebar:
     st.image('KV.png')
 
 ######## 메인화면에서 Expander로 DB 선택 ########
-with st.expander("DATABASE 선택", expanded=False):
+with st.expander("DATABASE 선택", expanded=True):
     db_main_index = db_list.index(st.session_state['database']) if st.session_state['database'] in db_list else 0
-    main_selection = st.selectbox("DATABASE LIST", db_list, index=db_main_index, key='main_db_select')
+    main_selection = st.selectbox("LIST", db_list, index=db_main_index, key='main_db_select')
     st.session_state['database'] = main_selection
 st.divider()
 
