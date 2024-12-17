@@ -63,7 +63,7 @@ def initialize_rag():
 
     if db is None:
         db = FAISS.load_local(
-            folder_path="C:\\python_rag\\database\\DB(241216)_fire_water_supp",
+            folder_path="DB(241216)_fire_water_supp",
             embeddings=embedding,
             allow_dangerous_deserialization=True
         )
