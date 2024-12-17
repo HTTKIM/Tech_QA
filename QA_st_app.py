@@ -158,7 +158,7 @@ with st.sidebar:
 ######## 메인화면에서 Expander로 DB 선택 ########
 with st.expander("DATABASE 선택", expanded=False):
     db_main_index = db_list.index(st.session_state['database']) if st.session_state['database'] in db_list else 0
-    main_selection = st.selectbox(db_list, index=db_main_index, key='main_db_select')
+    main_selection = st.selectbox("DATABASE LIST", db_list, index=db_main_index, key='main_db_select')
     st.session_state['database'] = main_selection
 st.divider()
 
