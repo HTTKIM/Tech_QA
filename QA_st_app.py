@@ -229,6 +229,6 @@ if prompt:
     # 최종 답변을 세션에 저장(전체 답변)
     st.session_state.messages.append({'role':'ai', 'content': partial_text})
 
-    # 참조 문서 표시
-    documents = qa_module.retrieve_documents(prompt)
-    display_retrieved_documents(documents)
+    # # 참조 문서 표시
+    # documents = qa_module.retrieve_documents(prompt)
+    # display_retrieved_documents(documents)
